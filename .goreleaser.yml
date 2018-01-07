@@ -1,0 +1,10 @@
+build:
+  main: cmd/spotify/main.go
+  binary: spotify
+  goos:
+    - darwin
+    - linux
+    - windows
+  goarch:
+    - amd64
+    - 386
