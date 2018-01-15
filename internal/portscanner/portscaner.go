@@ -20,6 +20,7 @@ func IsOpen(port int) bool {
 
 func FirstOpened(start, end int) (int, bool) {
 	ch := make(chan int)
+	defer close(ch)
 	done := make(chan struct{})
 
 	var wg sync.WaitGroup
