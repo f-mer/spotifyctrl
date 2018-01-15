@@ -3,6 +3,7 @@ package portscanner
 import (
 	"fmt"
 	"net"
+	"sync"
 	"time"
 )
 
@@ -17,14 +18,30 @@ func IsOpen(port int) bool {
 	return true
 }
 
-func FirstOpened(start, end int) int {
+func FirstOpened(start, end int) (int, bool) {
 	ch := make(chan int)
+	done := make(chan struct{})
+
+	var wg sync.WaitGroup
 	for port := start; port <= end; port++ {
+		wg.Add(1)
 		go func(port int) {
 			if IsOpen(port) {
 				ch <- port
 			}
+			wg.Done()
 		}(port)
 	}
-	return <-ch
+
+	go func() {
+		wg.Wait()
+		close(done)
+	}()
+
+	select {
+	case port := <-ch:
+		return port, true
+	case <-done:
+		return 0, false
+	}
 }

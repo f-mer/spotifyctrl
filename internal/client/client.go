@@ -71,8 +71,11 @@ type StatusOutput struct {
 	Running bool `json:"running"`
 }
 
-func NewClient() (*Client, error) {
-	port := portscanner.FirstOpened(4370, 4380)
+func New(startPort, endPort int) (*Client, error) {
+	port, ok := portscanner.FirstOpened(startPort, endPort)
+	if ok == false {
+		return nil, fmt.Errorf("SpotifyWebHelper is not listening on any port between %d and %d", startPort, endPort)
+	}
 
 	oauth, err := getOauthToken()
 	if err != nil {

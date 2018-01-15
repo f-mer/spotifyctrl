@@ -12,24 +12,24 @@ import (
 
 var (
 	version = "master"
+
+	app          = kingpin.New("spotify", "Spotify from the command-line.")
+	startPort    = app.Flag("start-port", "").Default("4370").Int()
+	endPort      = app.Flag("end-port", "").Default("4380").Int()
+	play         = app.Command("play", "Play a track by uri.")
+	playUri      = play.Arg("uri", "The resource identifier that you can enter in the Desktop client's search box to locate an artist, album, or track. To find a Spotify URI right-click on the track's name.").Required().String()
+	playContext  = play.Arg("context", "The base-62 identifier that you can find at the end of the Spotify URI (see above) for an artist, track, album, playlist, etc.").String()
+	pause        = app.Command("pause", "Pause playback.")
+	resume       = app.Command("resume", "Resume playback.")
+	status       = app.Command("status", "Display status information.")
+	statusFormat = status.Flag("format", "Go template").Default("{{.Track.ArtistResource.Name}} - {{.Track.TrackResource.Name}}").String()
 )
 
 func main() {
-	app := kingpin.New("spotify", "Spotify from the command-line.")
 	app.Version(version)
+	kingpin.MustParse(app.Parse(os.Args[1:]))
 
-	play := app.Command("play", "Play a track by uri.")
-	playUri := play.Arg("uri", "The resource identifier that you can enter in the Desktop client's search box to locate an artist, album, or track. To find a Spotify URI right-click on the track's name.").Required().String()
-	playContext := play.Arg("context", "The base-62 identifier that you can find at the end of the Spotify URI (see above) for an artist, track, album, playlist, etc.").String()
-
-	pause := app.Command("pause", "Pause playback.")
-
-	resume := app.Command("resume", "Resume playback.")
-
-	status := app.Command("status", "Display status information.")
-	statusFormat := status.Flag("format", "Go template").Default("{{.Track.ArtistResource.Name}} - {{.Track.TrackResource.Name}}").String()
-
-	spotify, err := client.NewClient()
+	spotify, err := client.New(*startPort, *endPort)
 	if err != nil {
 		log.Fatalf("error initializing client: %s", err)
 	}
