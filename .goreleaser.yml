@@ -1,6 +1,6 @@
 build:
-  main: cmd/spotify/main.go
-  binary: spotify
+  main: cmd/spotifyctrl/main.go
+  binary: spotifyctrl
   goos:
     - darwin
     - linux

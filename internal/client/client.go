@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/f-mer/spotify-cli/internal/portscanner"
+	"github.com/f-mer/spotifyctrl/internal/portscanner"
 )
 
 type Client struct {

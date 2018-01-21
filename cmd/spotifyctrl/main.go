@@ -7,13 +7,13 @@ import (
 
 	"github.com/tj/kingpin"
 
-	"github.com/f-mer/spotify-cli/internal/client"
+	"github.com/f-mer/spotifyctrl/internal/client"
 )
 
 var (
 	version = "master"
 
-	app          = kingpin.New("spotify", "Spotify from the command-line.")
+	app          = kingpin.New("spotifyctrl", "Spotify from the command-line.")
 	startPort    = app.Flag("start-port", "").Default("4370").Int()
 	endPort      = app.Flag("end-port", "").Default("4380").Int()
 	play         = app.Command("play", "Play a track by uri.")
